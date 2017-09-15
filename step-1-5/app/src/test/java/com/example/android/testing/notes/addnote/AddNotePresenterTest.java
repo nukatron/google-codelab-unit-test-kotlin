@@ -16,16 +16,25 @@
 
 package com.example.android.testing.notes.addnote;
 
+import com.example.android.testing.notes.data.Note;
 import com.example.android.testing.notes.data.NotesRepository;
+import com.example.android.testing.notes.util.ImageFile;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
 import static junit.framework.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the implementation of {@link AddNotePresenter}.
@@ -35,6 +44,10 @@ public class AddNotePresenterTest {
     // TODO: mock data here
     @Mock
     private NotesRepository mNoteRepository;
+    @Mock
+    private AddNoteContract.View mAddNoteView;
+    @Mock
+    private ImageFile mImageFile;
 
     private AddNotePresenter mAddNotesPresenter;
 
@@ -46,73 +59,89 @@ public class AddNotePresenterTest {
 
         // TODO: init AddNotePresenter here
         // Get a reference to the class under test
-//        mAddNotesPresenter = new AddNotePresenter(mNotesRepository, mAddNoteView, mImageFile);
+        mAddNotesPresenter = new AddNotePresenter(mNoteRepository, mAddNoteView, mImageFile);
     }
 
     @Test
     public void saveNoteToRepository_showsSuccessMessageUi() {
-        fail("Not Implement yet");
         // showcase we want to stub some method return (need add else case in if image.Exist())
-//        when(mImageFile.exists()).thenReturn(true);
+        when(mImageFile.exists()).thenReturn(true);
 
         // TODO: When the presenter is asked to save a note (just uncomment)
-//        mAddNotesPresenter.saveNote("New Note Title", "Some Note Description");
+        mAddNotesPresenter.saveNote("New Note Title", "Some Note Description");
 
         // TODO: Then verify the saveNote in repository is called and show Note List is shown in the UI
+        verify(mImageFile).getPath();
+        verify(mAddNoteView, never()).showEmptyNoteError();
+        verify(mNoteRepository).saveNote(any(Note.class));
+        verify(mAddNoteView).showNotesList();
     }
 
     @Test
     public void saveNote_emptyNoteShowsErrorUi() {
-        fail("Not Implement yet");
+        // create an condition
+        doReturn(true).when(mImageFile).exists();
+
         // TODO: When the presenter is asked to save an empty note (just uncomment)
-//        mAddNotesPresenter.saveNote("", "");
+        mAddNotesPresenter.saveNote("", "");
 
         // TODO: Then an empty not error is shown in the UI
+        verify(mImageFile).getPath();
+        verify(mAddNoteView).showEmptyNoteError();
     }
 
     @Test
     public void takePicture_CreatesFileAndOpensCamera() throws IOException {
-        fail("Not Implement yet");
         // TODO: When the presenter is asked to take an image
+        mAddNotesPresenter.takePicture();
 
         // TODO: Then an image file is created and camera is opened
         // TODO: verify imageFile.create() is called
+        verify(mImageFile).create(anyString(), anyString());
 
         // TODO: verify imageFile.getPath() is called
+        verify(mImageFile).getPath();
 
         // TODO: verify view call to open camera
+        verify(mAddNoteView).openCamera(anyString());
     }
 
     @Test
     public void imageAvailable_SavesImageAndUpdatesUiWithThumbnail() {
-        fail("Not Implement yet");
         // Given an a stubbed image file
         String imageUrl = "path/to/file";
         // TODO: stub method calling here (just uncomment)
-//        when(mImageFile.exists()).thenReturn(true);
-//        when(mImageFile.getPath()).thenReturn(imageUrl);
+        when(mImageFile.exists()).thenReturn(true);
+        when(mImageFile.getPath()).thenReturn(imageUrl);
 
         // TODO: When an image is made available to the presenter -> call imageAvailable
+        mAddNotesPresenter.imageAvailable();
 
         // TODO: Then the preview image of the stubbed image is shown in the UI
+        verify(mAddNoteView).showImagePreview(anyString());
     }
 
     @Test
     public void imageAvailable_FileDoesNotExistShowsErrorUi() {
-        fail("Not Implement yet");
         // TODO: Given the image file does not exist -> add `when`
+        when(mImageFile.exists()).thenReturn(false);
 
         // TODO: When an image is made available to the presenter -> call imageAvailable
+        mAddNotesPresenter.imageAvailable();
 
         // TODO: Then an error is shown in the UI and the image file is deleted
+        verify(mImageFile).delete();
+        verify(mAddNoteView).showImageError();
     }
 
     @Test
     public void noImageAvailable_ShowsErrorUi() {
-        fail("Not Implement yet");
         // TODO: When the presenter is notified that image capturing failed -> call imageCaptureFailed
+        mAddNotesPresenter.imageCaptureFailed();
 
         // TODO: Then an error is shown in the UI and the image file is deleted
+        verify(mImageFile).delete();
+        verify(mAddNoteView).showImageError();
     }
 
 }

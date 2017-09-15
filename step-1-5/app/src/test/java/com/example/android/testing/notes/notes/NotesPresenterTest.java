@@ -71,7 +71,6 @@ public class NotesPresenterTest {
 
     @Test
     public void clickOnFab_ShowsAddsNoteUi() {
-        fail("Not Implement yet");
         // TODO: When adding a new note
 
         // TODO: Then verify add note UI is shown
@@ -79,7 +78,6 @@ public class NotesPresenterTest {
 
     @Test
     public void clickOnNote_ShowsDetailUi() {
-        fail("Not Implement yet");
         // Given a stubbed note by creating mock object
         Note requestedNote = new Note("Details Requested", "For this note");
 
@@ -90,7 +88,6 @@ public class NotesPresenterTest {
 
     @Test
     public void loadNotesFromRepositoryAndLoadIntoView() {
-        fail("Not Implement yet");
         // TODO: When loading of Notes is requested
 
         // TODO: Callback is captured and invoked with stubbed notes --> trigger callback

@@ -35,7 +35,6 @@ class NotesPresenterTestKtAns {
 
     @Test
     fun clickOnFab_ShowsAddsNoteUi() {
-
         // TODO: When adding a new note
         mNotesPresenter.addNewNote()
 
