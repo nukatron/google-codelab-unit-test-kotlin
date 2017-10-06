@@ -25,7 +25,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -72,8 +74,10 @@ public class NotesPresenterTest {
     @Test
     public void clickOnFab_ShowsAddsNoteUi() {
         // TODO: When adding a new note
+        mNotesPresenter.addNewNote();
 
         // TODO: Then verify add note UI is shown
+        Mockito.verify(mNotesView).showAddNote();
     }
 
     @Test
@@ -82,16 +86,26 @@ public class NotesPresenterTest {
         Note requestedNote = new Note("Details Requested", "For this note");
 
         // TODO: When open note details is requested
+        mNotesPresenter.openNoteDetails(requestedNote);
 
         // TODO: Then verify detail UI is shown
+        Mockito.verify(mNotesView).showNoteDetailUi(requestedNote.getId());
     }
 
     @Test
     public void loadNotesFromRepositoryAndLoadIntoView() {
         // TODO: When loading of Notes is requested
+        mNotesPresenter.loadNotes(true);
 
         // TODO: Callback is captured and invoked with stubbed notes --> trigger callback
+        Mockito.verify(mNotesRepository).getNotes(mLoadNotesCallbackCaptor.capture());
+        mLoadNotesCallbackCaptor.getValue().onNotesLoaded(NOTES);
 
         // TODO: Then progress indicator is hidden and notes are shown in UI
+        InOrder inOrder = Mockito.inOrder(mNotesView, mNotesRepository);
+        inOrder.verify(mNotesView).setProgressIndicator(true);
+        inOrder.verify(mNotesRepository).refreshData();
+        inOrder.verify(mNotesView).setProgressIndicator(false);
+        inOrder.verify(mNotesView).showNotes(NOTES);
     }
 }
